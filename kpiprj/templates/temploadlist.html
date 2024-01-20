@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}
+    All tasks
+{% endblock %}
+
+{% block content %}
+    <br>
+    <a href="{% url "prj-list" %}"> Go Back</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="{% url 'create-tempload' project_id %}">
+        <button type="button">Create New Task</button>
+    </a>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    {% if notask == 0 %}
+    <a href="{% url 'kpi-calculation' project_id %}">
+        <button type="button">KPI Calculation</button>
+    </a>
+    {% endif %}
+    <span  style="margin-left: 20%;color:dark;font-weight:bold;font-size: 120%"> {{project_name}}</span>
+    <br><br>
+    {% if notask == 0 %}
+    <table>
+        <tr>
+            <th>Phase</th>
+            <th>Task name</th>
+            <th>Plan Start Date</th>
+            <th>Plan End Date</th>
+            <th>Plan Costs</th>
+            <th>Real Start Date</th>
+            <th>Real End Date</th>
+            <th>Real Costs</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <!--Below 2 columns only for testing-->
+            <!--th>temp_load_id</th>
+            <th>project_id</th-->
+        </tr>
+        <tr></tr>
+        {% for row in data %}
+        <tr>
+            <td>{{ row.0 }}</td>
+            <td>{{ row.1 }}</td>
+            <td>{{ row.2 }}</td>
+            <td>{{ row.3 }}</td>
+            <td>{{ row.4 }}</td>
+            <td>{{ row.5 }}</td>
+            <td>{{ row.6 }}</td>
+            <td>{{ row.7 }}</td>
+            <td><a href="{% url 'update-tempload' project_id row.8 %}">Edit&nbsp;&nbsp;/&nbsp;&nbsp;</a></td>
+            <td><a href="{% url 'delete-tempload' project_id row.8 %}">Delete&nbsp;&nbsp;/&nbsp;&nbsp;</a></td>
+            <td><a href="{% url 'view-tempload' project_id row.8 row.0 %}">View</a></td>
+            <td>&nbsp;&nbsp;&nbsp;</td>
+            <!--td>{{ row.8 }}</td>
+            <td>{{ project_id }}</td-->
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+{% endblock %}

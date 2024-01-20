@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+<main class="formPage my-xl">
+    <div class="content-box">
+        <div class="formWrapper">
+        <h5>Projects List</h5>
+        <br>
+        {% if noproject == 0 %}
+            <table>
+                <tr>
+                    <th>Project Name</th>
+                    <th>Creation Date</th>
+                    <th>Username</th>
+                </tr>
+                <tr></tr>
+                {% for prj in listprj %}
+                <!-- <li><a href="{% url "tempload-list" prj.project_id %}">  {{ prj.project_name }} </a>  </li> -->
+                <!-- <li><a href="{{ prj.get_absolute_url}}">  {{ prj.project_name }} </a>  </li> -->
+                <tr>
+                    <td><a href="{{ prj.get_absolute_url}}">  {{ prj.project_name }} </a></td>
+                    <td>{{ prj.created_at }}</td>
+                    <td>{{ prj.username }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+        </div>
+    </div>
+</main>
+{% endblock %}

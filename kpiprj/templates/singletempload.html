@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}
+    All tasks
+{% endblock %}
+
+{% block content %}
+    <br>
+    <main class="formPage my-xl">
+        <div class="content-box">
+            <div class="formWrapper">
+                <a href='{% url "tempload-list" project_id %}'><i class="im im-angle-left"></i>Go Back</a>
+                <span  style="margin-left: 30%;color:dark;font-weight:bold;font-size: 110%"> {{project_name}}</span>
+                <ul class="content-box">
+                  <br>
+                  <li>Phase Name : {{ phase_name }} </li><br>
+                  <li>Task Name : {{ temp_load.task_name }} </li><br>
+                  <li>Start Date : {{ temp_load.startdate }} </li><br>
+                  <li>End Date : {{ temp_load.enddate }} </li><br>
+                  <li>Budget : {{ temp_load.budget }} </li><br>
+                  <li>Start Date Is : {{ temp_load.startdate_is }} </li><br>
+                  <li>End Date Is : {{ temp_load.enddate_is }} </li><br>
+                  <li>Budget Is : {{ temp_load.budget_is }} </li><br>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+{% endblock %}

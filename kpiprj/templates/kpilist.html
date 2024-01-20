@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}
+    All tasks
+{% endblock %}
+
+{% block content %}
+
+
+    <main class="formPage my-xl">
+        <div class="content-box">
+            <div class="formWrapper">
+                    <h5>KPI Calculation</h5>
+                    <br>
+                    <a href='{% url "tempload-list" project_id %}'> Go Back</a>
+                    <span  style="margin-left: 24%;color:dark;font-weight:bold;font-size: 110%"> {{project_name}}</span>
+                    <br><br><br>
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <!-- {{ form.as_p }} -->
+                            <div class="form-group mb-4">
+                                <label for="stichtag">Stichdate : </label>&nbsp;&nbsp;
+                                <input class="form-control" type="date" id="stichtag" name="stichtag" required>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <input type="submit" value="Calculation" />
+                            </div>
+                    </form>
+                <ul>
+                  <br><br>
+                  <li>Stichtag: {{ st }} </li><br>
+                  <li>Planned Value : {{ pv }} </li><br>
+                  <li>Earned Value : {{ ev }} </li><br>
+                  <li>Actual Cost : {{ ac }} </li><br>
+                  <li>Schedule Performance Index : {{ spi }} </li><br>
+                  <li>Cost Performance Index : {{ cpi }} </li><br>
+                  <li>Budget at Completion : {{ bac }} </li><br>
+                  <li>To-Complete-Performance Index : {{ tcpi }} </li><br>
+                  <li>Neue Prognostizierte Projektkosten : {{ eac }} </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+{% endblock %}
