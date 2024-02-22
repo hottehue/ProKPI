@@ -160,15 +160,15 @@ def KpiCalculation(request, project_id):
             bac = 0 if (bac is None) else bac
             cursor.close()
 
-            spi = (ev / pv)*100 if not (pv == 0) else 0
+            spi = round((ev / pv)*100,2) if not (pv == 0) else 0
 
-            cpi = (ev / ac)*100 if not (ac == 0) else 0
+            cpi = round((ev / ac)*100,2) if not (ac == 0) else 0
 
             bac_minus_ac = bac - ac
 
-            tcpi = ((bac-ev)/bac_minus_ac)*100 if not (bac_minus_ac == 0) else 0
+            tcpi = round((bac-ev)/bac_minus_ac*100,2) if not (bac_minus_ac == 0) else 0
 
-            eac = (bac / cpi)*100 if not (cpi == 0) else 0
+            eac = round((bac / cpi)*100,2) if not (cpi == 0) else 0
     try:
         prj = Project.objects.get(pk=project_id)
     except:
