@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, Http404, JsonResponse
 from django.db import connection, IntegrityError
-from .models import Project, TempLoad, Phase, Tn, Tp
+from .models import Project, TempLoad, Phase, Tn, Tp, outcome_reason_action
 from .forms import TemploadForm, KpiListForm, ProjectForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -104,6 +104,8 @@ def KpiCalculation(request, project_id):
     data = []
     stichtag = None
     pv, ev, ac, spi, cpi, bac, bac_minus_ac, tcpi, eac = 0, 0, 0, 0, 0, 0, 0, 0, 0
+    scenario = None
+    reason_action = []
 
     if request.method == 'POST':
         # print("request.POST = ") # print (request.POST)
@@ -169,6 +171,54 @@ def KpiCalculation(request, project_id):
             tcpi = round((bac-ev)/bac_minus_ac*100,2) if not (bac_minus_ac == 0) else 0
 
             eac = round((bac / cpi)*100,2) if not (cpi == 0) else 0
+
+            # schedule_variance
+            if ev < pv:
+                schedule_variance = 'Negativ'
+            elif ev == pv:
+                schedule_variance = 'Neutral'
+            else:
+                schedule_variance = 'Positiv'
+
+            # cost_variance
+            if ev < ac:
+                cost_variance = 'Negativ'
+            elif ev == ac:
+                cost_variance = 'Neutral'
+            else:
+                cost_variance = 'Positiv'
+
+            # For testing:
+            # schedule_variance = 'Positiv'; cost_variance = 'Negativ'
+            # schedule_variance = 'Positiv'; cost_variance = 'Neutral'
+            # schedule_variance = 'Positiv'; cost_variance = 'Positiv'
+            # schedule_variance = 'Neutral'; cost_variance = 'Negativ'
+            # schedule_variance = 'Neutral'; cost_variance = 'Neutral'
+            # schedule_variance = 'Neutral'; cost_variance = 'Positiv'
+            # schedule_variance = 'Negativ'; cost_variance = 'Negativ'
+            # schedule_variance = 'Negativ'; cost_variance = 'Neutral'
+            # schedule_variance = 'Negativ'; cost_variance = 'Positiv'
+
+
+            # Dictionary mapping tuples of conditions to outcome scenario
+            # 1st condition is schedule_variance / 2nd condition is  cost_variance
+            outcome_scenario = {
+                ('Positiv', 'Negativ'): 1,
+                ('Positiv', 'Neutral'): 2,
+                ('Positiv', 'Positiv'): 3,
+                ('Neutral', 'Negativ'): 4,
+                ('Neutral', 'Neutral'): 5,
+                ('Neutral', 'Positiv'): 6,
+                ('Negativ', 'Negativ'): 7,
+                ('Negativ', 'Neutral'): 8,
+                ('Negativ', 'Positiv'): 9,
+            }
+
+            scenario = outcome_scenario.get((schedule_variance, cost_variance))
+
+            # Variable outcome_reason_action gets loaded in file models.py
+            reason_action = outcome_reason_action.get(scenario)
+
     try:
         prj = Project.objects.get(pk=project_id)
     except:
@@ -176,7 +226,8 @@ def KpiCalculation(request, project_id):
         return HttpResponse(status=500)
 
 
-    return render(request, 'kpilist.html', {'form': form,'st': stichtag,'pv': pv,'ev': ev,'ac': ac,'spi': spi,'cpi': cpi,'bac': bac,'tcpi': tcpi,'eac': eac,'project_id': project_id,'project_name': prj.project_name})
+    return render(request, 'kpilist.html', {'form': form,'st': stichtag,'pv': pv,'ev': ev,'ac': ac,'spi': spi,'cpi': cpi,'bac': bac,'tcpi': tcpi,'eac': eac,\
+                                            'scenario': scenario, 'reason_action': reason_action, 'project_id': project_id,'project_name': prj.project_name})
 
 @login_required(login_url="login")
 def createTemploadView(request, project_id):

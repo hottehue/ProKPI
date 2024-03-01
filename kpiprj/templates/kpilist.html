@@ -35,9 +35,25 @@
                   <li>Cost Performance Index : {{ cpi }} </li><br>
                   <li>Budget at Completion : {{ bac }} </li><br>
                   <li>To-Complete-Performance Index : {{ tcpi }} </li><br>
-                  <li>Neue Prognostizierte Projektkosten : {{ eac }} </li>
+                  <li>Neue Prognostizierte Projektkosten : {{ eac }} </li><br>
+                  {% if scenario != None %}
+                    <li>Scenario : {{ scenario }} </li>
+                  {% endif %}
                 </ul>
             </div>
+            {% if scenario != None %}
+            <table>
+                <tr><th>Synopse</th><th>Mögliche Gründe</th><th>Mögliche Lösungen</th></tr>
+                <tr><td colspan="3"></td></tr>
+                <tr><td colspan="3"></td></tr>
+                <tr><td colspan="3"></td></tr>
+                <tr>
+                    <td>{{ reason_action.0 }}</td>
+                    <td>{% for elt in reason_action.1 %}{{ elt }}<br><br>{% endfor %}</td>
+                    <td>{% for elt in reason_action.2 %}{{ elt }}<br><br>{% endfor %}</td>
+                </tr>
+            </table>
+            {% endif %}
         </div>
     </main>
 

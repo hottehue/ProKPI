@@ -13,6 +13,49 @@ from django.urls import reverse
 
 from django.contrib.auth.models import User
 
+# Constant outcome_reason_action (used in Kpi calculation, should be later stored in a DB table)
+outcome_reason_action = {
+    1: ['Schneller als geplant, aber Mehrkosten', ['Team macht Überstunden', 'Zeit wird nicht effizient genutzt',\
+                                       'Es wird zu viel Zeit für einzelne Aktivitäten verwendet', 'Zu viele Experten einem Task zugeordnet'],\
+        ['Zeiterfassung überprüfen', 'Uberstunden begrenzen',\
+         'Anzahl Experten reduzieren', 'Zeitvorgaben straffen']],
+
+    2: ['Schneller als geplant, aber keine Mehrkosten', ['Grundsätzlich positiv',\
+        'Falls es Abhängigkeiten zwischen Aktivitäten gibt, besteht die Gefahr, dass Arbeiten begonnen werden,\
+         die auf eine andere Aktivität hätten warten sollen'],\
+        ['Abhängigkeiten überprüfen', 'Sicherstellen, dass die Experten an den richtigen Dingen arbeiten',\
+         'Entschleunigen, nicht unnötig, Überstunden anfallen lassen']],
+
+    3: ['Schneller als geplant, aber Minderkosten', ['Bei einem erfahrenen Team positiv, kann aber auch Symptom sein für:',\
+        'Scope wird nicht richtig verstanden','Es wird «abgekürzt» und Aufgaben werden auf später verschoben'],\
+        ['Sicherstellen, dass Aktivitäten wirklich abgeschlossen sind', 'Sicherstellen, dass der Scope klar definiert ist', \
+         'Sicherstellen, dass die Experten an den vorgesehenen Aufgaben arbeiten und nicht einfache Aktivitäten vorziehen']],
+
+    4: ['Im Plan, aber Mehrkosten', ['Ein unerfahrenes Team verbraucht zu viel Zeit',\
+                                       'Der Terminplan ist zu grosszugig (Parkinsons Gesetz)'],\
+        ['Überstunden überwachen und Effizienz erhöhen', 'Ausidungsgraratien Traninig oder Coaching erhöhen']],
+
+    5: ['Voll im Plan', ['Die Performance ist nur so gut wie der Plan. Sind die Schätzungen korrekt und stimmt die Qualität der Lieferobjekte?',\
+                                     'Wurde etwas übersehen?'],\
+        ['Stichproben von Lieferobjekten erheben und Qualität und Vollständigkeit überprüfen']],
+
+    6: ['Im Plan, aber Minderkosten', ['Ein erfahrenes Team arbeitet hocheffizient oder:',\
+        'Experten brauchen weniger Zeit als geplant', 'Experten kürzen ab, um Termine einzuhalten'],\
+        ['Lieferobjekte auf Qualität und Vollständigkeit überprüfen', 'Vollständigkeit der Zeiterfassung überprüfen. Überprüfen, ob das Team überqualifiziert ist']],
+
+    7: ['Hinter Plan und Mehrkosten', ['Zu viele kleine Änderungen', 'Fehlende Erfahrung im Team',\
+                                       'Unklarer Scope führt zu Doppelarbeiten', 'Zu viel Aufwand für Reviews'],\
+        ['Meistbetroffene Aktivitäten überprüfen', 'Erfahrene Experten als Mentoren einsetzen',\
+         'Sicherstellen, dass das Team den Scope versteht', 'Abnahmeregeln überprüfen']],
+
+    8: ['Hinter Plan, aber keine Mehrkosten', ['Zu wenig Ressourcen','Experten brauchen weniger Zeit als geplant'],\
+            ['Zusätzliche Ressourcen beantragen','Zeiterfassung überprüfen']],
+
+    9: ['Hinter Plan und Minderkosten', ['Erfahrenes und effizientes Team', 'Experten arbeiten an einfachen Aufgaben zuerst',\
+                                         'Ressourcen sind ausgefallen'],\
+        ['Arbeitsaufteilung im Team überprüfen', 'Zusätzliche Ressourcen einsetzen']],
+}
+
 class Bf(models.Model):
     budgetfinish_id = models.AutoField(primary_key=True)
     task = models.OneToOneField('Tn', on_delete=models.CASCADE, blank=True, null=True)
