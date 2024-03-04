@@ -199,7 +199,6 @@ def KpiCalculation(request, project_id):
             # schedule_variance = 'Negativ'; cost_variance = 'Neutral'
             # schedule_variance = 'Negativ'; cost_variance = 'Positiv'
 
-
             # Dictionary mapping tuples of conditions to outcome scenario
             # 1st condition is schedule_variance / 2nd condition is  cost_variance
             outcome_scenario = {
