@@ -149,5 +149,3 @@ USE_THOUSAND_SEPARATOR = True
 FORMAT_MODULE_PATH = [
     'kpiproject.formats',
 ]
-
-

@@ -7,6 +7,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
+from datetime import datetime
 
 # Create your views here.
 def loginUser(request):
@@ -170,7 +171,7 @@ def KpiCalculation(request, project_id):
 
             tcpi = round((bac-ev)/bac_minus_ac*100,2) if not (bac_minus_ac == 0) else 0
 
-            eac = round((bac / cpi)*100,2) if not (cpi == 0) else 0
+            eac = round((bac / cpi)*100) if not (cpi == 0) else 0
 
             # schedule_variance
             if ev < pv:
@@ -217,6 +218,9 @@ def KpiCalculation(request, project_id):
 
             # Variable outcome_reason_action gets loaded in file models.py
             reason_action = outcome_reason_action.get(scenario)
+
+            date_object = datetime.strptime(stichtag, "%Y-%m-%d")
+            stichtag = date_object.strftime("%d-%m-%Y")
 
     try:
         prj = Project.objects.get(pk=project_id)
