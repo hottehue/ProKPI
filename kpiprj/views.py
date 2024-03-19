@@ -106,6 +106,7 @@ def KpiCalculation(request, project_id):
     stichtag = None
     pv, ev, ac, spi, cpi, bac, bac_minus_ac, tcpi, eac = 0, 0, 0, 0, 0, 0, 0, 0, 0
     scenario = None
+    ppsd, pped = None, None
     reason_action = []
 
     if request.method == 'POST':
@@ -161,6 +162,16 @@ def KpiCalculation(request, project_id):
             data = cursor.fetchall()
             bac = data[0][0]
             bac = 0 if (bac is None) else bac
+            cursor.close()
+
+        with connection.cursor() as cursor:
+            # Planned Project Start Date: ppsd and Planned Project End Date: pped
+            cursor.execute('SELECT min(vw.startdate) as ppsd, max(vw.enddate) as pped FROM show_all vw\
+                            JOIN (SELECT * FROM temp_load WHERE project_id = %s and username = %s) tl ON vw.temp_load_id = tl.temp_load_id'
+                           , placeholders2_lst)
+            data = cursor.fetchall()
+            ppsd = data[0][0]
+            pped = data[0][1]
             cursor.close()
 
             spi = round((ev / pv)*100,2) if not (pv == 0) else 0
@@ -222,6 +233,9 @@ def KpiCalculation(request, project_id):
             date_object = datetime.strptime(stichtag, "%Y-%m-%d")
             stichtag = date_object.strftime("%d-%m-%Y")
 
+            ppsd = ppsd.strftime("%d-%m-%Y")
+            pped = pped.strftime("%d-%m-%Y")
+
     try:
         prj = Project.objects.get(pk=project_id)
     except:
@@ -229,8 +243,8 @@ def KpiCalculation(request, project_id):
         return HttpResponse(status=500)
 
 
-    return render(request, 'kpilist.html', {'form': form,'st': stichtag,'pv': pv,'ev': ev,'ac': ac,'spi': spi,'cpi': cpi,'bac': bac,'tcpi': tcpi,'eac': eac,\
-                                            'scenario': scenario, 'reason_action': reason_action, 'project_id': project_id,'project_name': prj.project_name})
+    return render(request, 'kpilist.html', {'form': form,'st': stichtag,'pv': pv,'ev': ev,'ac': ac,'spi': spi,'cpi': cpi,'bac': bac,'tcpi': tcpi,'eac': eac, \
+        'ppsd': ppsd, 'pped': pped,'scenario': scenario, 'reason_action': reason_action, 'project_id': project_id,'project_name': prj.project_name})
 
 @login_required(login_url="login")
 def createTemploadView(request, project_id):
