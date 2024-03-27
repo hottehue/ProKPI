@@ -7,7 +7,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # Create your views here.
 def loginUser(request):
@@ -104,9 +104,9 @@ def KpiCalculation(request, project_id):
     form = KpiListForm()
     data = []
     stichtag = None
-    pv, ev, ac, spi, cpi, bac, bac_minus_ac, tcpi, eac = 0, 0, 0, 0, 0, 0, 0, 0, 0
+    pv, ev, ac, spi_ratio, spi, cpi, bac, bac_minus_ac, tcpi, eac, pd, ed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     scenario = None
-    ppsd, pped = None, None
+    ppsd, pped, ecd = None, None, None
     reason_action = []
 
     if request.method == 'POST':
@@ -170,11 +170,25 @@ def KpiCalculation(request, project_id):
                             JOIN (SELECT * FROM temp_load WHERE project_id = %s and username = %s) tl ON vw.temp_load_id = tl.temp_load_id'
                            , placeholders2_lst)
             data = cursor.fetchall()
+            # Planned Project Start Date: ppsd
             ppsd = data[0][0]
+            # Planned Project End Date: pped
             pped = data[0][1]
             cursor.close()
 
-            spi = round((ev / pv)*100,2) if not (pv == 0) else 0
+            # Planned Duration: pd
+            pd = pped - ppsd
+            pd = pd.days
+
+            spi_ratio = ev / pv
+            # spi in % below
+            spi = round(spi_ratio*100,2) if not (pv == 0) else 0
+
+            # Estimated Duration: ed
+            ed = round(pd/spi_ratio) if not (spi_ratio == 0) else 0
+
+            # Estimated Completion Date: ecd
+            ecd = ppsd + timedelta(days=ed)
 
             cpi = round((ev / ac)*100,2) if not (ac == 0) else 0
 
@@ -235,6 +249,7 @@ def KpiCalculation(request, project_id):
 
             ppsd = ppsd.strftime("%d-%m-%Y")
             pped = pped.strftime("%d-%m-%Y")
+            ecd  = ecd.strftime("%d-%m-%Y")
 
     try:
         prj = Project.objects.get(pk=project_id)
@@ -244,7 +259,7 @@ def KpiCalculation(request, project_id):
 
 
     return render(request, 'kpilist.html', {'form': form,'st': stichtag,'pv': pv,'ev': ev,'ac': ac,'spi': spi,'cpi': cpi,'bac': bac,'tcpi': tcpi,'eac': eac, \
-        'ppsd': ppsd, 'pped': pped,'scenario': scenario, 'reason_action': reason_action, 'project_id': project_id,'project_name': prj.project_name})
+        'ppsd': ppsd, 'pped': pped, 'ecd': ecd, 'scenario': scenario, 'reason_action': reason_action, 'project_id': project_id,'project_name': prj.project_name})
 
 @login_required(login_url="login")
 def createTemploadView(request, project_id):
@@ -288,6 +303,7 @@ def updateTemploadView(request, project_id, temp_load_id):
     prj = get_object_or_404(Project, pk=project_id)
     context = {'form': form, 'project_id': project_id, 'project_name': prj.project_name}
     return render(request, "temploadform.html", context)
+
 @login_required(login_url="login")
 def deleteTemploadView(request, project_id, temp_load_id):
     #temp_load = get_object_or_404(TempLoad, pk=temp_load_id)
