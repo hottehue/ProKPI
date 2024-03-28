@@ -104,7 +104,7 @@ def KpiCalculation(request, project_id):
     form = KpiListForm()
     data = []
     stichtag = None
-    pv, ev, ac, spi_ratio, spi, cpi, bac, bac_minus_ac, tcpi, eac, pd, ed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    pv, ev, ac, spi_ratio, spi, cpi, cpi_ratio, bac, bac_minus_ac, tcpi, eac, pd, ed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     scenario = None
     ppsd, pped, ecd = None, None, None
     reason_action = []
@@ -181,8 +181,8 @@ def KpiCalculation(request, project_id):
             pd = pd.days
 
             spi_ratio = ev / pv
-            # spi in % below
-            spi = round(spi_ratio*100,2) if not (pv == 0) else 0
+            # spi in % to display
+            spi = format(spi_ratio, ".2%") if not (pv == 0) else None
 
             # Estimated Duration: ed
             ed = round(pd/spi_ratio) if not (spi_ratio == 0) else 0
@@ -190,13 +190,16 @@ def KpiCalculation(request, project_id):
             # Estimated Completion Date: ecd
             ecd = ppsd + timedelta(days=ed)
 
-            cpi = round((ev / ac)*100,2) if not (ac == 0) else 0
+            cpi_ratio = round((ev / ac)*100,2) if not (ac == 0) else 0
+            # cpi in % to display
+            cpi = format((ev / ac), ".2%") if not (ac == 0) else 0
 
             bac_minus_ac = bac - ac
 
-            tcpi = round((bac-ev)/bac_minus_ac*100,2) if not (bac_minus_ac == 0) else 0
+            # tcpi in % to display
+            tcpi = format((bac-ev)/bac_minus_ac, ".2%") if not (bac_minus_ac == 0) else 0
 
-            eac = round((bac / cpi)*100) if not (cpi == 0) else 0
+            eac = round((bac / cpi_ratio)*100) if not (cpi_ratio == 0) else 0
 
             # schedule_variance
             if ev < pv:
