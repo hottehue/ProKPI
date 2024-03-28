@@ -28,19 +28,31 @@
                 <ul>
                   <br><br>
                   <li>Stichtag: {{ st }} </li><br>
+                </ul>
+                <h6>PLAN</h6><br>
+                <ul>
+                  <li>Planned Project Start Date : {{ ppsd }} </li><br>
+                  <li>Planned Project End Date : {{ pped }} </li><br>
+                  <li>Budget at Completion : {{ bac }} </li><br>
+                </ul>
+                <h6>STATUS</h6><br>
+                <ul>
                   <li>Planned Value : {{ pv }} </li><br>
                   <li>Earned Value : {{ ev }} </li><br>
                   <li>Actual Cost : {{ ac }} </li><br>
                   <li>Schedule Performance Index : {{ spi }} </li><br>
                   <li>Cost Performance Index : {{ cpi }} </li><br>
-                  <li>Budget at Completion : {{ bac }} </li><br>
-                  <li>To-Complete-Performance Index : {{ tcpi }} </li><br>
-                  <li>Neue Prognostizierte Projektkosten : {{ eac }} </li><br>
-                  <li>Planned Project Start Date : {{ ppsd }} </li><br>
-                  <li>Planned Project End Date : {{ pped }} </li><br>
+                </ul>
+                <h6>PROGNOSE</h6><br>
+                <ul>
                   <li>Estimated Completion Date : {{ ecd }} </li><br>
+                  <li>Neue Prognostizierte Projektkosten : {{ eac }} </li><br>
+                  <li>To-Complete-Performance Index : {{ tcpi }} </li><br>
                   {% if scenario != None %}
-                    <li>Scenario : {{ scenario }} </li>
+                    </ul>
+                    <h6>MÖGLICHE GRÜNDE UND HANDLUNGSOPTIONEN</h6><br>
+                    <ul>
+                        <li>Scenario : {{ scenario }} </li>
                   {% endif %}
                 </ul>
             </div>
