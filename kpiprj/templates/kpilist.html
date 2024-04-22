@@ -43,14 +43,16 @@
                   <li>Schedule Performance Index: {{ spi }} </li><br>
                   <li>Cost Performance Index: {{ cpi }} </li><br>
                 </ul>
-                <h6>PROGNOSE</h6><br>
+                <!--h6>PROGNOSE</h6><br-->
+                <h6>PROGNOSIS</h6><br>
                 <ul>
                   <li>Estimated Completion Date: {{ ecd }} </li><br>
                   <li>Neue Prognostizierte Projektkosten: {{ eac }} </li><br>
                   <li>To-Complete-Performance Index: {{ tcpi }} </li><br>
                   {% if scenario != None %}
                     </ul>
-                    <h6>MÖGLICHE GRÜNDE UND HANDLUNGSOPTIONEN</h6><br>
+                    <!--h6>MÖGLICHE GRÜNDE UND HANDLUNGSOPTIONEN</h6><br-->
+                    <h6>POSSIBLE REASONS AND SOLUTIONS</h6><br>
                     <ul>
                         <li>Scenario: {{ scenario }} </li>
                   {% endif %}
@@ -58,7 +60,8 @@
             </div>
             {% if scenario != None %}
             <table>
-                <tr><th>Synopse</th><th>Mögliche Gründe</th><th>Mögliche Lösungen</th></tr>
+                <!-- tr><th>Synopse</th><th>Mögliche Gründe</th><th>Mögliche Lösungen</th></tr-->
+                <tr><th>Synopsis</th><th>Possible reasons</th><th>Possible solutions</th></tr>
                 <tr><td colspan="3"></td></tr>
                 <tr><td colspan="3"></td></tr>
                 <tr><td colspan="3"></td></tr>

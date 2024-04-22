@@ -14,7 +14,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 
 # Constant outcome_reason_action (used in Kpi calculation, should be later stored in a DB table)
-outcome_reason_action = {
+OUTCOME_REASON_ACTION_DE = {
     1: ['Schneller als geplant, aber Mehrkosten', ['Team macht Überstunden', 'Zeit wird nicht effizient genutzt',\
                                        'Es wird zu viel Zeit für einzelne Aktivitäten verwendet', 'Zu viele Experten einem Task zugeordnet'],\
         ['Zeiterfassung überprüfen', 'Überstunden begrenzen',\
@@ -55,6 +55,50 @@ outcome_reason_action = {
                                          'Ressourcen sind ausgefallen'],\
         ['Arbeitsaufteilung im Team überprüfen', 'Zusätzliche Ressourcen einsetzen']],
 }
+
+OUTCOME_REASON_ACTION_EN = {
+    1: ['Faster than planned, but additional costs', ['Team works overtime', 'Time is not used efficiently',\
+                                       'Too much time is spent on individual activities', 'Too many experts assigned to one task'],\
+        ['Check time tracking', 'Limit overtime',\
+         'Reduce number of experts', 'Lighten time constraints']],
+
+    2: ['Faster than planned, but no additional costs', ['Basically positive',\
+        'If there are dependencies between activities, there is a risk that work will be started,\
+         that should have waited for another activity'],\
+        ['Check dependencies', 'Ensure that the experts are working on the right things',\
+         'Slow down, do not allow unnecessary overtime']],
+
+    3: ['Faster than planned, but lower costs', ['Positive for an experienced team, but can also be a symptom of:',\
+        'Scope is not properly understood','It is "cut short" and tasks are postponed to later'],\
+        ['Ensure that activities are really completed', 'Ensure that the scope is clearly defined', \
+         'Ensure that the experts work on the intended tasks and do not prioritize simple activities']],
+
+    4: ['On schedule, but additional costs', ['An inexperienced team consumes too much time',\
+                                       "The schedule is too generous (Parkinson's law)"],\
+        ['Monitor overtime and increase efficiency', 'Streamline scheduling', 'Increase training level through traninig or coaching']],
+
+    5: ['Fully on target', ['Performance is only as good as the plan. Are the estimates correct and is the quality of the deliverables right?',\
+                                     'Has anything been overlooked?'],\
+        ['Collect samples of delivery items and check quality and completeness']],
+
+    6: ['On schedule, but lower costs', ['An experienced team works highly efficiently or:',\
+        'Experts need less time than planned', 'Experts cut corners to meet deadlines'],\
+        ['Check delivery objects for quality and completeness', 'Check completeness of time recording', 'Check whether the team is overqualified']],
+
+    7: ['Behind schedule and additional costs', ['Too many small changes', 'Lack of experience in the team',\
+                                       'Unclear scope leads to duplication of work', 'Too much effort for reviews'],\
+        ['Review most affected activities', 'Use experienced experts as mentors',\
+         'Ensure the team understands the scope', 'Review acceptance rules']],
+
+    8: ['Behind schedule, but no additional costs', ['Too few resources','Experts need less time than planned'],\
+            ['Request additional resources','Check time recording']],
+
+    9: ['Behind schedule and under budget', ['Experienced and efficient team', 'Experts work on simple tasks first',\
+                                         'Resources are down'],\
+        ['Check work distribution in the team', 'Use additional resources']],
+}
+
+outcome_reason_action = OUTCOME_REASON_ACTION_EN
 
 class Bf(models.Model):
     budgetfinish_id = models.AutoField(primary_key=True)

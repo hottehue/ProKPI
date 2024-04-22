@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta
+from django.conf import settings
 
 # Create your views here.
 def loginUser(request):
@@ -180,7 +181,7 @@ def KpiCalculation(request, project_id):
             pd = pped - ppsd
             pd = pd.days
 
-            spi_ratio = ev / pv
+            spi_ratio = (ev / pv)  if not (pv == 0) else 0
             # spi in % to display
             spi = format(spi_ratio, ".2%") if not (pv == 0) else None
 
@@ -244,12 +245,17 @@ def KpiCalculation(request, project_id):
 
             scenario = outcome_scenario.get((schedule_variance, cost_variance))
 
+            stichtag_date = datetime.strptime(stichtag, "%Y-%m-%d").date()
+
+            # Case of stichtag < planned project start date
+            if stichtag_date < ppsd:
+                scenario = None
+                messages.error(request, 'The stichtag is earlier than the planned project start date!')
+
             # Variable outcome_reason_action gets loaded in file models.py
-            reason_action = outcome_reason_action.get(scenario)
+            reason_action = outcome_reason_action.get(scenario) if not (scenario == None) else None
 
-            date_object = datetime.strptime(stichtag, "%Y-%m-%d")
-            stichtag = date_object.strftime("%d-%m-%Y")
-
+            stichtag = stichtag_date.strftime("%d-%m-%Y")
             ppsd = ppsd.strftime("%d-%m-%Y")
             pped = pped.strftime("%d-%m-%Y")
             ecd  = ecd.strftime("%d-%m-%Y")
@@ -268,6 +274,12 @@ def KpiCalculation(request, project_id):
 def createTemploadView(request, project_id):
     filtered_choices = Phase.objects.filter(project_id=project_id).values_list('phase_id', 'phase_name')
     form = TemploadForm(filtered_choices=filtered_choices)
+    form.fields["startdate"].label = "Planned Start Date"
+    form.fields["enddate"].label = "Planned End Date"
+    form.fields["budget"].label = "Planned Costs"
+    form.fields["startdate_is"].label = "Actual Start Date"
+    form.fields["enddate_is"].label = "Actual End Date"
+    form.fields["budget_is"].label = "Actual Costs"
 
     if request.method == 'POST':
         # print (request.POST)
@@ -292,6 +304,12 @@ def updateTemploadView(request, project_id, temp_load_id):
     temp_load = get_object_or_404(TempLoad, pk=temp_load_id)
     filtered_choices = Phase.objects.filter(project_id=project_id).values_list('phase_id', 'phase_name')
     form = TemploadForm(instance=temp_load,filtered_choices=filtered_choices)
+    form.fields["startdate"].label = "Planned Start Date"
+    form.fields["enddate"].label = "Planned End Date"
+    form.fields["budget"].label = "Planned Costs"
+    form.fields["startdate_is"].label = "Actual Start Date"
+    form.fields["enddate_is"].label = "Actual End Date"
+    form.fields["budget_is"].label = "Actual Costs"
 
     if request.method == 'POST':
         # print (request.POST)
