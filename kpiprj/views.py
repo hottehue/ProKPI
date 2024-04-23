@@ -245,6 +245,7 @@ def KpiCalculation(request, project_id):
 
             scenario = outcome_scenario.get((schedule_variance, cost_variance))
 
+            # Conversion stichtag to date format in order to compare it with ppsd
             stichtag_date = datetime.strptime(stichtag, "%Y-%m-%d").date()
 
             # Case of stichtag < planned project start date

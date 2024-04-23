@@ -129,6 +129,10 @@ USE_I18N = True
 
 USE_TZ = True
 
+USE_THOUSAND_SEPARATOR = True
+
+# Settings for THOUSAND_SEPARATOR and DECIMAL_SEPARATOR located in:
+#   kpiproject\kpiproject\formats\en\formats.py
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -145,8 +149,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-USE_THOUSAND_SEPARATOR = True
 
 FORMAT_MODULE_PATH = [
     'kpiproject.formats',

@@ -19,7 +19,8 @@
                         {% csrf_token %}
                         <!-- {{ form.as_p }} -->
                             <div class="form-group mb-4">
-                                <label for="stichtag">Stichdate: </label>&nbsp;&nbsp;
+                                <!--<label for="stichtag">Stichdate: </label>&nbsp;&nbsp; -->
+                                <label for="stichtag">Status Date: </label>&nbsp;&nbsp;
                                 <input class="form-control" type="date" id="stichtag" name="stichtag" required>
                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                 <input type="submit" value="Calculation" />
@@ -27,7 +28,7 @@
                     </form>
                 <ul>
                   <br><br>
-                  <li>Stichtag: {{ st }} </li><br>
+                  <li>Status Date: {{ st }} </li><br>
                 </ul>
                 <h6>PLAN</h6><br>
                 <ul>
@@ -44,15 +45,15 @@
                   <li>Cost Performance Index: {{ cpi }} </li><br>
                 </ul>
                 <!--h6>PROGNOSE</h6><br-->
-                <h6>PROGNOSIS</h6><br>
+                <h6>FORECAST</h6><br>
                 <ul>
                   <li>Estimated Completion Date: {{ ecd }} </li><br>
-                  <li>Neue Prognostizierte Projektkosten: {{ eac }} </li><br>
+                  <li>Estimate at Completion: {{ eac }} </li><br>
                   <li>To-Complete-Performance Index: {{ tcpi }} </li><br>
                   {% if scenario != None %}
                     </ul>
                     <!--h6>MÖGLICHE GRÜNDE UND HANDLUNGSOPTIONEN</h6><br-->
-                    <h6>POSSIBLE REASONS AND SOLUTIONS</h6><br>
+                    <h6>POSSIBLE REASONS AND OPTIONS FOR ACTION</h6><br>
                     <ul>
                         <li>Scenario: {{ scenario }} </li>
                   {% endif %}
