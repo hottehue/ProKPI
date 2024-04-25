@@ -22,7 +22,7 @@
                 <!-- <li><a href="{{ prj.get_absolute_url}}">  {{ prj.project_name }} </a>  </li> -->
                 <tr>
                     <td><a href="{{ prj.get_absolute_url}}">  {{ prj.project_name }} </a></td>
-                    <td>{{ prj.created_at }}</td>
+                    <td>{{ prj.created_at|date:"d M Y" }}</td>
                     <td>{{ prj.username }}</td>
                 </tr>
                 {% endfor %}

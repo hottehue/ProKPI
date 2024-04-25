@@ -256,10 +256,10 @@ def KpiCalculation(request, project_id):
             # Variable outcome_reason_action gets loaded in file models.py
             reason_action = outcome_reason_action.get(scenario) if not (scenario == None) else None
 
-            stichtag = stichtag_date.strftime("%d-%m-%Y")
-            ppsd = ppsd.strftime("%d-%m-%Y")
-            pped = pped.strftime("%d-%m-%Y")
-            ecd  = ecd.strftime("%d-%m-%Y")
+            stichtag = stichtag_date.strftime("%d-%b-%Y")
+            ppsd = ppsd.strftime("%d-%b-%Y")
+            pped = pped.strftime("%d-%b-%Y")
+            ecd  = ecd.strftime("%d-%b-%Y")
 
     try:
         prj = Project.objects.get(pk=project_id)
