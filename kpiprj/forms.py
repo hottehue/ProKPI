@@ -21,9 +21,9 @@ class TemploadForm(forms.ModelForm):
             'startdate': forms.DateInput(attrs={'type': 'date','required': 'required'}),
             'enddate': forms.DateInput(attrs={'type': 'date','required': 'required'}),
             'budget': forms.NumberInput(attrs={'required': 'required'}),
-            'startdate_is': forms.DateInput(attrs={'type': 'date','required': 'required'}),
-            'enddate_is': forms.DateInput(attrs={'type': 'date','required': 'required'}),
-            'budget_is': forms.NumberInput(attrs={'required': 'required'}),
+            'startdate_is': forms.DateInput(attrs={'type': 'date'}),
+            'enddate_is': forms.DateInput(attrs={'type': 'date'}),
+            'budget_is': forms.NumberInput(),
         }
 
     def __init__(self, *args, **kwargs):

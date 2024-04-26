@@ -49,7 +49,7 @@
             <td style="text-align: center;">{{ row.4 }}</td>
             <td>{{ row.5|date:"d M Y" }}</td>
             <td>{{ row.6|date:"d M Y" }}</td>
-            <td style="text-align: center;">{{ row.7 }}</td>
+            <td style="text-align: center;">{{ row.7|default_if_none:"" }}</td>
             <td><a href="{% url 'update-tempload' project_id row.8 %}">Edit&nbsp;&nbsp;/&nbsp;&nbsp;</a></td>
             <td><a href="{% url 'delete-tempload' project_id row.8 %}">Delete&nbsp;&nbsp;/&nbsp;&nbsp;</a></td>
             <td><a href="{% url 'view-tempload' project_id row.8 row.0 %}">View</a></td>

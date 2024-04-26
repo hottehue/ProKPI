@@ -137,8 +137,10 @@ def KpiCalculation(request, project_id):
 
         with connection.cursor() as cursor:
             # Earned Value : ev
-            cursor.execute('SELECT sum(vw.budget) as ev FROM (SELECT temp_load_id,project_id,budget FROM show_all WHERE enddate_is <=%s::date) vw\
-                            JOIN (SELECT * FROM temp_load WHERE project_id = %s and username = %s) tl ON vw.temp_load_id = tl.temp_load_id'
+            cursor.execute('SELECT sum(vw.budget) as ev FROM (SELECT temp_load_id,project_id,budget\
+                            FROM show_all WHERE enddate_is <=%s::date) vw\
+                            JOIN (SELECT * FROM temp_load WHERE project_id = %s and username = %s)\
+                             tl ON vw.temp_load_id = tl.temp_load_id'
                            , placeholders_lst)
             data = cursor.fetchall()
             ev = data[0][0]
