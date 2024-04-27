@@ -134,6 +134,9 @@ class Phase(models.Model):
         managed = False
         db_table = 'phase'
 
+    def __str__(self):
+        return f"project= {self.project} , phase_name= {self.phase_name}"
+
 class Project(models.Model):
     project_id = models.AutoField(primary_key=True)
     project_name = models.CharField(max_length=255, blank=True, null=True)
