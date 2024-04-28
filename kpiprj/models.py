@@ -123,6 +123,18 @@ class Bp(models.Model):
         managed = False
         db_table = 'bp'
 
+class Phase_ref(models.Model):
+    phase_ref_id = models.AutoField(primary_key=True)
+    phase_ref_name = models.CharField(max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'phase_ref'
+
+    def __str__(self):
+        return f"phase_ref_name= {self.phase_ref_name}"
+
+
 
 class Phase(models.Model):
     phase_id = models.AutoField(primary_key=True)
