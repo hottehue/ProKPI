@@ -16,7 +16,6 @@ def loginUser(request):
         return redirect('prj-list')
 
     if request.method == 'POST':
-        print(request.POST)
         username = request.POST['username']
         password = request.POST['password']
 
@@ -43,10 +42,23 @@ def logoutUser(request):
 def PrjListView(request):
     user_connected = request.user.username
     listprj = Project.objects.filter(username=user_connected)
+
     noproject = 1 if len(listprj) == 0 else 0
+    view_only = ''
     if (not user_connected) or (user_connected is None):
         messages.error(request, 'Log in to see or create projects')
-    return render(request, "prjlist.html", {"listprj": listprj,"noproject":noproject})
+        return render(request, "prjlist.html",\
+                      {"listprj": listprj, "noproject": noproject, 'view_only': view_only})
+
+    # Get the groups the user belongs to and set view_only.
+    obj_user = User.objects.get(username=user_connected)
+    user_groups = obj_user.groups.all()
+    for group in user_groups:
+        if (str(group) == 'view'):
+            view_only = 'Y'
+            break
+    return render(request, "prjlist.html", {"listprj": listprj,"noproject":noproject, 'view_only': view_only})
+
 
 @login_required(login_url="login")
 def createPrjView(request):
@@ -73,15 +85,18 @@ def createPrjView(request):
     context = {'form': form}
     return render(request, "prjform.html", context)
 
+@login_required(login_url="login")
 def TemploadListView(request, id):
+    user_connected = request.user.username
     # List below has elements (project_id and username) and is used to filter the following query
-    placeholders_lst = [id,str(request.user)]
+    placeholders_lst = [id,str(user_connected)]
     with connection.cursor() as cursor:
-        cursor.execute('SELECT ph.phase_name, tl.task_name, tl.startdate, tl.enddate\
-                                     , tl.budget ,tl.startdate_is, tl.enddate_is, tl.budget_is, tl.temp_load_id, tl.project_id \
-                                FROM (SELECT * FROM temp_load WHERE project_id = %s AND username = %s) tl\
-                                JOIN (SELECT * FROM phase) ph\
-        						ON tl.phase_id = ph.phase_id ORDER by tl.temp_load_id', placeholders_lst)
+        cursor.execute("SELECT ph.phase_name, tl.task_name, tl.startdate, tl.enddate\
+                , tl.budget ,tl.startdate_is, tl.enddate_is, tl.budget_is, tl.temp_load_id, tl.project_id \
+            FROM (SELECT * FROM temp_load WHERE project_id = %s AND username = %s) tl\
+            JOIN (SELECT * FROM phase) ph ON (tl.phase_id = ph.phase_id)\
+            JOIN (SELECT project_id FROM project WHERE to_delete <> 'Y' OR to_delete IS NULL) pr\
+        	ON (ph.project_id = pr.project_id) ORDER by tl.temp_load_id", placeholders_lst)
 
         # cursor.execute('SELECT ph.phase_name, tl.task_name, tl.startdate, tl.enddate\
         #                      , tl.budget ,tl.startdate_is, tl.enddate_is, tl.budget_is, tl.temp_load_id, ph.project_id \
@@ -98,9 +113,20 @@ def TemploadListView(request, id):
 
         cursor.close()
         prj = get_object_or_404(Project, pk=id)
-    return render(request, 'temploadlist.html', {'data': data, 'project_id': id, 'project_name': prj.project_name, 'notask': notask})
+        # Get the groups the user belongs to and set view_only.
+        obj_user = User.objects.get(username=user_connected)
+        user_groups = obj_user.groups.all()
+        view_only = ''
+        for group in user_groups:
+            if (str(group) == 'view'):
+                view_only = 'Y'
+                break
+    return render(request, 'temploadlist.html',\
+        {'data': data, 'project_id': id, 'project_name': prj.project_name, 'notask': notask, 'view_only': view_only})
 
+@login_required(login_url="login")
 def KpiCalculation(request, project_id):
+    user_connected = request.user.username
     # print("request.GET = ") # print(request.GET)
     form = KpiListForm()
     data = []
@@ -269,12 +295,22 @@ def KpiCalculation(request, project_id):
         #return JsonResponse({"error": "Database connection error"}, status=500)
         return HttpResponse(status=500)
 
-
-    return render(request, 'kpilist.html', {'form': form,'st': stichtag,'pv': pv,'ev': ev,'ac': ac,'spi': spi,'cpi': cpi,'bac': bac,'tcpi': tcpi,'eac': eac, \
-        'ppsd': ppsd, 'pped': pped, 'ecd': ecd, 'scenario': scenario, 'reason_action': reason_action, 'project_id': project_id,'project_name': prj.project_name})
+    # Get the groups the user belongs to and set view_only.
+    obj_user = User.objects.get(username=user_connected)
+    user_groups = obj_user.groups.all()
+    view_only = ''
+    for group in user_groups:
+        if (str(group) == 'view'):
+            view_only = 'Y'
+            break
+    return render(request, 'kpilist.html',\
+    {'form': form,'st': stichtag,'pv': pv,'ev': ev,'ac': ac,'spi': spi,'cpi': cpi,'bac': bac,'tcpi': tcpi,'eac': eac,\
+        'ppsd': ppsd, 'pped': pped, 'ecd': ecd, 'scenario': scenario,\
+        'reason_action': reason_action, 'project_id': project_id,'project_name': prj.project_name, 'view_only': view_only})
 
 @login_required(login_url="login")
 def createTemploadView(request, project_id):
+    user_connected = request.user.username
     filtered_choices = Phase.objects.filter(project_id=project_id).values_list('phase_id', 'phase_name')
     form = TemploadForm(filtered_choices=filtered_choices)
     form.fields["startdate"].label = "Planned Start Date"
@@ -299,11 +335,20 @@ def createTemploadView(request, project_id):
             return redirect('tempload-list', project_id)
 
     prj = get_object_or_404(Project, pk=project_id)
-    context = {'form': form, 'project_id': project_id, 'project_name': prj.project_name}
+    # Get the groups the user belongs to and set view_only.
+    obj_user = User.objects.get(username=user_connected)
+    user_groups = obj_user.groups.all()
+    view_only = ''
+    for group in user_groups:
+        if (str(group) == 'view'):
+            view_only = 'Y'
+            break
+    context = {'form': form, 'project_id': project_id, 'project_name': prj.project_name, 'view_only': view_only}
     return render(request, "temploadform.html", context)
 
 @login_required(login_url="login")
 def updateTemploadView(request, project_id, temp_load_id):
+    user_connected = request.user.username
     temp_load = get_object_or_404(TempLoad, pk=temp_load_id)
     filtered_choices = Phase.objects.filter(project_id=project_id).values_list('phase_id', 'phase_name')
     form = TemploadForm(instance=temp_load,filtered_choices=filtered_choices)
@@ -325,12 +370,20 @@ def updateTemploadView(request, project_id, temp_load_id):
             return redirect('tempload-list', project_id)
 
     prj = get_object_or_404(Project, pk=project_id)
-    context = {'form': form, 'project_id': project_id, 'project_name': prj.project_name}
+    # Get the groups the user belongs to and set view_only.
+    obj_user = User.objects.get(username=user_connected)
+    user_groups = obj_user.groups.all()
+    view_only = ''
+    for group in user_groups:
+        if (str(group) == 'view'):
+            view_only = 'Y'
+            break
+    context = {'form': form, 'project_id': project_id, 'project_name': prj.project_name, 'view_only': view_only}
     return render(request, "temploadform.html", context)
 
 @login_required(login_url="login")
 def deleteTemploadView(request, project_id, temp_load_id):
-    #temp_load = get_object_or_404(TempLoad, pk=temp_load_id)
+    user_connected = request.user.username
     temp_load = TempLoad.objects.get(pk=temp_load_id)
 
     if request.method == 'POST':
@@ -341,15 +394,46 @@ def deleteTemploadView(request, project_id, temp_load_id):
         return redirect('tempload-list', project_id)
 
     prj = get_object_or_404(Project, pk=project_id)
-    context = {'object': temp_load, 'project_id': project_id, 'project_name': prj.project_name}
+    # Get the groups the user belongs to and set view_only.
+    obj_user = User.objects.get(username=user_connected)
+    user_groups = obj_user.groups.all()
+    view_only = ''
+    for group in user_groups:
+        if (str(group) == 'view'):
+            view_only = 'Y'
+            break
+    context = {'object': temp_load, 'project_id': project_id, 'project_name': prj.project_name, 'view_only': view_only}
     return render(request, "delete_template.html", context)
 
 @login_required(login_url="login")
 def singleTempLoadView(request, project_id, temp_load_id, phase_name):
     #temp_load = get_object_or_404(TempLoad, pk=temp_load_id)
     temp_load = TempLoad.objects.get(pk=temp_load_id)
-    print(temp_load)
     phase_name = phase_name
     prj = get_object_or_404(Project, pk=project_id)
     context = {'phase_name': phase_name, 'temp_load': temp_load, 'project_id': project_id,'project_name': prj.project_name}
     return render(request, "singletempload.html", context)
+
+@login_required(login_url="login")
+def deleteProjectView(request, project_id):
+    user_connected = request.user.username
+    project = Project.objects.get(pk=project_id)
+
+    if request.method == 'POST':
+        try:
+            project.to_delete = 'Y'
+            project.save()
+        except:
+            messages.error(request, 'Error: Deletion not possible')
+        return redirect('prj-list')
+
+    # Get the groups the user belongs to and set view_only.
+    obj_user = User.objects.get(username=user_connected)
+    user_groups = obj_user.groups.all()
+    view_only = ''
+    for group in user_groups:
+        if (str(group) == 'view'):
+            view_only = 'Y'
+            break
+    context = {'object': project, 'project_id': project_id, 'project_name': project.project_name, 'view_only': view_only}
+    return render(request, "delete_project_template.html", context)

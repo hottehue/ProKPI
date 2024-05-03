@@ -9,7 +9,9 @@
     <a href="{% url "prj-list" %}"> Go Back</a>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <a href="{% url 'create-tempload' project_id %}">
+        {% if view_only != 'Y' %}
         <button type="button">Create New Task</button>
+        {% endif %}
     </a>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     {% if notask == 0 %}
@@ -50,8 +52,10 @@
             <td>{{ row.5|date:"d M Y" }}</td>
             <td>{{ row.6|date:"d M Y" }}</td>
             <td style="text-align: center;">{{ row.7|default_if_none:"" }}</td>
+            {% if view_only != 'Y' %}
             <td><a href="{% url 'update-tempload' project_id row.8 %}">Edit&nbsp;&nbsp;/&nbsp;&nbsp;</a></td>
             <td><a href="{% url 'delete-tempload' project_id row.8 %}">Delete&nbsp;&nbsp;/&nbsp;&nbsp;</a></td>
+            {% endif %}
             <td><a href="{% url 'view-tempload' project_id row.8 row.0 %}">View</a></td>
             <td>&nbsp;&nbsp;&nbsp;</td>
             <!--td>{{ row.8 }}</td>

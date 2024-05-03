@@ -13,4 +13,5 @@ urlpatterns = [
     path('delete-tempload/<int:project_id>/<int:temp_load_id>', views.deleteTemploadView, name='delete-tempload'),
     path('view-tempload/<int:project_id>/<int:temp_load_id>/<str:phase_name>', views.singleTempLoadView, name='view-tempload'),
     path('create-project/',views.createPrjView,name='create-project'),
+    path('delete-project/<int:project_id>', views.deleteProjectView, name='delete-project'),
 ]

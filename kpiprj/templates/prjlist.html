@@ -15,16 +15,21 @@
                     <th>Project Name</th>
                     <th>Creation Date</th>
                     <th>Username</th>
+                    <th></th>
                 </tr>
                 <tr></tr>
                 {% for prj in listprj %}
-                <!-- <li><a href="{% url "tempload-list" prj.project_id %}">  {{ prj.project_name }} </a>  </li> -->
-                <!-- <li><a href="{{ prj.get_absolute_url}}">  {{ prj.project_name }} </a>  </li> -->
+                <!-- Below do not display the project if marked to delete -->
+                {% if prj.to_delete != 'Y' %}
                 <tr>
                     <td><a href="{{ prj.get_absolute_url}}">  {{ prj.project_name }} </a></td>
                     <td>{{ prj.created_at|date:"d M Y" }}</td>
                     <td>{{ prj.username }}</td>
+                    {% if view_only != 'Y' %}
+                    <td><a href="{% url 'delete-project' prj.project_id %}">Delete project</a></td>
+                    {% endif %}
                 </tr>
+                {% endif %}
                 {% endfor %}
             </table>
         {% endif %}

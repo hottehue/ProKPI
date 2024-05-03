@@ -154,6 +154,7 @@ class Project(models.Model):
     project_name = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     username = models.CharField(max_length=150)
+    to_delete = models.CharField(max_length=1)
 
     class Meta:
         managed = False
