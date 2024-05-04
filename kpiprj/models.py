@@ -164,7 +164,8 @@ class Project(models.Model):
         return reverse("tempload-list", args=[self.project_id])
 
     def __str__(self):
-        return f" id={self.project_id}, name= {self.project_name}"
+        return f" id={self.project_id}, name= {self.project_name},\
+         username= {self.username}, to_delete= {self.to_delete}"
 
 class TempLoad(models.Model):
     temp_load_id = models.AutoField(primary_key=True)
