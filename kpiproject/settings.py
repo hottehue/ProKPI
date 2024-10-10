@@ -105,13 +105,18 @@ WSGI_APPLICATION = 'kpiproject.wsgi.application'
 # }
 
 # Internal Database URL:  below to the Postgres database on Render.com.
+# DATABASES = {
+#     'default': dj_database_url.config(
+# 	default='postgresql://kpiproject_kwf1_user:JjdsDgmt4O8JsIoJ3kCcj7oXcYrYRU3n@dpg-cqn6bm5svqrc73fk9c50-a:5432/kpiproject_kwf1_21vq'
+#     )
+# }
+
+# Internal Database URL:  below to the Postgres database on Render.com.
 DATABASES = {
     'default': dj_database_url.config(
-	default='postgresql://kpiproject_kwf1_user:JjdsDgmt4O8JsIoJ3kCcj7oXcYrYRU3n@dpg-cqn6bm5svqrc73fk9c50-a:5432/kpiproject_kwf1_21vq'
+	default='postgresql://kpiproject_kwf1_user:YpwgfGQt6FZP9pzp7Nx74Kjxdl47z0Po@dpg-cs3tdmrtq21c738jv930-a:5432/kpiproject_kwf1_rfvn'
     )
 }
-
-
 
 
 # Password validation
