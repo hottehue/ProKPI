@@ -60,7 +60,7 @@ OUTCOME_REASON_ACTION_EN = {
     1: ['Faster than planned, but additional costs', ['Team works overtime', 'Time is not used efficiently',\
                                        'Too much time is spent on individual activities', 'Too many experts assigned to one task'],\
         ['Check time tracking', 'Limit overtime',\
-         'Reduce number of experts', 'Lighten time constraints']],
+         'Reduce number of experts', 'Tighten deadlines']],
 
     2: ['Faster than planned, but no additional costs', ['Basically positive',\
         'If there are dependencies between activities, there is a risk that work will be started,\
@@ -70,8 +70,8 @@ OUTCOME_REASON_ACTION_EN = {
 
     3: ['Faster than planned, but lower costs', ['Positive for an experienced team, but can also be a symptom of:',\
         'Scope is not properly understood','It is "cut short" and tasks are postponed to later'],\
-        ['Ensure that activities are really completed', 'Ensure that the scope is clearly defined', \
-         'Ensure that the experts work on the intended tasks and do not prioritize simple activities']],
+        ['Ensure that activities are really completed', 'Ensure that the scope is clearly defined',\
+         'Ensure that the experts work on the intended tasks and do not prioritise simple activities']],
 
     4: ['On schedule, but additional costs', ['An inexperienced team consumes too much time',\
                                        "The schedule is too generous (Parkinson's law)"],\
@@ -94,7 +94,7 @@ OUTCOME_REASON_ACTION_EN = {
             ['Request additional resources','Check time recording']],
 
     9: ['Behind schedule and under budget', ['Experienced and efficient team', 'Experts work on simple tasks first',\
-                                         'Resources are down'],\
+                                         'Limited resource team availability?'],\
         ['Check work distribution in the team', 'Use additional resources']],
 }
 
