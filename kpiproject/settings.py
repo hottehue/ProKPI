@@ -112,12 +112,19 @@ WSGI_APPLICATION = 'kpiproject.wsgi.application'
 # }
 
 # Internal Database URL:  below to the Postgres database on Render.com.
+# DATABASES = {
+#     'default': dj_database_url.config(
+# 	default='postgresql://kpiproject_kwf1_user:YpwgfGQt6FZP9pzp7Nx74Kjxdl47z0Po@dpg-cs3tdmrtq21c738jv930-a:5432/kpiproject_kwf1_rfvn'
+#     )
+# }
+
+# External Database URL:  below to the Postgres database on Render.com.
 DATABASES = {
     'default': dj_database_url.config(
-	default='postgresql://kpiproject_kwf1_user:YpwgfGQt6FZP9pzp7Nx74Kjxdl47z0Po@dpg-cs3tdmrtq21c738jv930-a:5432/kpiproject_kwf1_rfvn'
+	# default='postgresql://kpiproject_kwf1_user:JjdsDgmt4O8JsIoJ3kCcj7oXcYrYRU3n@dpg-cqn6bm5svqrc73fk9c50-a.frankfurt-postgres.render.com:5432/kpiproject_kwf1_21vq'
+    default='postgresql://kpiproject_kwf1_69em_user:LusK33RyRUMxpaNxQxl7xn5oWCyPdxJp@dpg-ct4458t2ng1s73a27o50-a.frankfurt-postgres.render.com:5432/kpiproject_kwf1_69em'
     )
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
